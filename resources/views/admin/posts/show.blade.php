@@ -5,6 +5,11 @@
         <div class="post py-4">
             <h2 class="text-center">{{$post['title']}}</h2>
             <p>{{$post['content']}}</p>
+            <p>Argomenti: 
+                @foreach($post->tags as $tag)
+                    {{$tag->name}}
+                @endforeach
+            </p>
         </div>
         <button class="btn btn-primary"><a class="text-decoration-none text-white" href="{{route('admin.posts.index')}}">Torna a tutti i post</a></button>
         <button class="btn btn-warning"><a class="text-decoration-none text-black" href="{{route('admin.posts.edit',$post->id)}}">Modifica</a></button>

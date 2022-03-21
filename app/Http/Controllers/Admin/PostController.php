@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Tag;
 use Illuminate\Support\Str;
 use App\Cathegory;
 
@@ -18,7 +19,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return view('admin.posts.index',compact('posts'));
+        $tags = Tag::all();
+        return view('admin.posts.index',compact('posts','tags'));
     }
 
     /**
@@ -29,7 +31,8 @@ class PostController extends Controller
     public function create()
     {
         $cathegories = Cathegory::all();
-        return view('admin.posts.create',compact('cathegories'));
+        $tags = Tag::all();
+        return view('admin.posts.create',compact('cathegories','tags'));
     }
 
     /**
@@ -43,7 +46,8 @@ class PostController extends Controller
         $request->validate([
             'title'=>'required|string|max:100',
             'content'=>'required',
-            'cathegory_id' => 'nullable'
+            'cathegory_id' => 'nullable|exists:cathegories,id',
+            "tags" => 'exists:tags,id'
         ]);
 
         $form_data=$request->all();
@@ -62,9 +66,10 @@ class PostController extends Controller
         $form_data['slug'] = $slugTitle;
 
         $form_data['published'] = true;
-        $post = Post::create($form_data);
+        $post->fill($form_data);
 
         $post->save();
+        $post->tags()->sync(isset($form_data['tags']) ? $form_data['tags'] : [] );
 
         return redirect()->route('admin.posts.index');
     }
@@ -89,7 +94,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $cathegories = Cathegory::all();
-        return view('admin.posts.edit',compact('post','cathegories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit',compact('post','cathegories','tags'));
     }
 
     /**
@@ -107,7 +113,8 @@ class PostController extends Controller
             'title'=>'required|string|max:100',
             'content'=>'required',
             'user_id' => 'required',
-            'cathegory_id' => 'nullable'
+            'cathegory_id' => 'nullable|exists:cathegories,id',
+            "tags" => 'exists:tags,id'
         ]);
 
         $form_data=$request->all();
@@ -124,6 +131,7 @@ class PostController extends Controller
         }
 
         $post->update($form_data);
+        $post->tags()->sync(isset($form_data['tags']) ? $form_data['tags'] : [] );
 
         return redirect()->route('admin.posts.show',compact('post'));
     }

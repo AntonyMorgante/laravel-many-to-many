@@ -18,6 +18,14 @@
                     <option value="{{$cathegory->id}}">{{$cathegory->name}}</option>                    
                 @endforeach
             </select>
+            <div class="form-group" name="tags" id="tags">
+                @foreach($tags as $tag)
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{$tag->id}}" name="tags[]" id="{{$tag->slug}}">
+                        <label class="form-check-label" for="{{$tag->slug}}">{{$tag->name}}</label>
+                    </div>
+                @endforeach
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Pubblica</button>
             </div>

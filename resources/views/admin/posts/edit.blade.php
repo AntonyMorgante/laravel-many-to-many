@@ -20,6 +20,14 @@
                     </option>                    
                 @endforeach
             </select>
+            <div class="form-group" name="tags" id="tags">
+                @foreach($tags as $tag)
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="tags[]" value="{{$tag->id}}" {{$post->tags->contains($tag) ? 'checked' : ''}}>
+                        <label for="{{$tag->slug}}">{{$tag->name}}</label>
+                    </div>
+                @endforeach
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Pubblica</button>
             </div>
