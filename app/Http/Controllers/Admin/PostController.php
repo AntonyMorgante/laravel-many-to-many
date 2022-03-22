@@ -7,10 +7,18 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Tag;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\Cathegory;
 
 class PostController extends Controller
 {
+    protected $validation = [
+        'title'=>'required|string|max:100',
+        'content'=>'required',
+        'cathegory_id' => 'nullable|exists:cathegories,id',
+        "tags" => 'exists:tags,id',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,bmp'
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -43,18 +51,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title'=>'required|string|max:100',
-            'content'=>'required',
-            'cathegory_id' => 'nullable|exists:cathegories,id',
-            "tags" => 'exists:tags,id'
-        ]);
-
         $form_data=$request->all();
-
-        $post = new Post();   
         $user_id = $request->user()->id;
         $form_data['user_id'] = $user_id;
+
+        $request->validate($this->validation);
+
+        $post = new Post();   
 
         //slug
         $slugTitle= Str::slug($form_data['title']);
@@ -65,7 +68,12 @@ class PostController extends Controller
         }
         $form_data['slug'] = $slugTitle;
 
-        $form_data['published'] = true;
+        //image
+        if(isset($form_data['image'])) {
+            $img_path = Storage::put('uploads', $form_data['image']);
+            $form_data['image'] = $img_path;
+        }
+
         $post->fill($form_data);
 
         $post->save();
@@ -109,13 +117,7 @@ class PostController extends Controller
     {
         $user_id = $request->user()->id;
         $request['user_id'] = $user_id;
-        $request->validate([
-            'title'=>'required|string|max:100',
-            'content'=>'required',
-            'user_id' => 'required',
-            'cathegory_id' => 'nullable|exists:cathegories,id',
-            "tags" => 'exists:tags,id'
-        ]);
+        $request->validate($this->validation);
 
         $form_data=$request->all();
         

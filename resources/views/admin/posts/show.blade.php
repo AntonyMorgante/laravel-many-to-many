@@ -4,6 +4,9 @@
     <div class="container">
         <div class="post py-4">
             <h2 class="text-center">{{$post['title']}}</h2>
+            @if (isset($post->image))
+                <img class="my-4" src="{{asset('storage/'.$post->image)}}" alt="">
+            @endif
             <p>{{$post['content']}}</p>
             <p>Argomenti: 
                 @foreach($post->tags as $tag)

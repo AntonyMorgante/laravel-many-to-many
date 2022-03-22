@@ -2,15 +2,19 @@
 
 @section('content')
     <div class="container">
-        <form action="{{route('admin.posts.store')}}" method="POST">
+        <form action="{{route('admin.posts.store')}}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="title">Titolo</label>
-                <input type="text" name="title" id="title">
+                <label class="form-label" for="title">Titolo</label>
+                <input class="form-control" type="text" name="title" id="title">
             </div>
             <div class="form-group">
-                <label for="content">Contenuto</label>
-                <textarea name="content" id="content" cols="30" rows="10"></textarea>
+                <label class="form-label" for="content">Contenuto</label>
+                <textarea class="form-control" name="content" id="content" cols="30" rows="10"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="formFile" class="form-label">Immagine</label>
+                <input class="form-control" type="file" name="image" id="formFile">
             </div>
             <select class="form-group" aria-label="Default select example" name="cathegory_id" id="cathegory_id">
                 <option selected>Seleziona la categoria</option>

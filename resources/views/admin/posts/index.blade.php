@@ -6,6 +6,7 @@
             <thead>
                 <tr>
                 <th scope="col">#</th>
+                <th scope="col">Thumb</th>
                 <th scope="col">Titolo</th>
                 <th scope="col">Categoria</th>
                 <th scope="col">Anteprima</th>
@@ -14,13 +15,19 @@
                 </tr>
             </thead>
             <tbody>
-
                 @php
                     $i=1;
                 @endphp
                 @foreach($posts as $post)
                     <tr>
                         <th scope="row">{{$i}}</th>
+                        <td class="text-center">
+                            @if (isset($post->image))
+                                <img src="{{asset('storage/'.$post->image)}}" class="w-25" alt="">
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>{{$post->title}}</td>
                         <td class="text-center">{{$post->cathegory->name}}</td>
                         <td class="text-truncate px-4" style="max-width: 450px;">{{$post['content']}}</td>
